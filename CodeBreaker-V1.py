@@ -57,6 +57,7 @@ are the clues. The key is a tuple and the clues are a string
 '''
 
 def Guess(total_guesses):
+    ''' I need to add the check that they dont repeat numbers '''
     Guess = ''
     y = False
     while not(len(Guess)==5 and y):  
