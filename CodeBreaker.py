@@ -1,7 +1,7 @@
 '''
 Code Breaker Game
-Version 1: Computer is the Code Maker and User is the Code Maker
-no duplicates
+Version 1: Computer is the Code Maker and User is the Code Maker. The Code that 
+choosen has no duplicates
 
 1. Explain Rules
 2a. Computer Chooses Code No Duplicates
@@ -12,7 +12,6 @@ no duplicates
 5. Repeat Steps 3 and 4 Until the CLues are all black or 12 guesses has passed
 6. End the game
 '''
-# 2 Computer Chooses code no duplicates:
 
 import random
 import time
@@ -37,7 +36,9 @@ def Beginning():
 
 
 '''
-2a: COmputer Chooses Code with No Duplicates
+2a: COmputer Chooses Code
+There are no duplicates in this code
+The Code is a list
 '''
 
 def choose_code_no():
@@ -49,25 +50,10 @@ def choose_code_no():
 
 
 '''
-2b: Computer Chooses Code with possible Duplicates
-'''
-def choose_code():
-    Num_Total = [1,2,3,4,5,6,7,8]
-    Code = []
-    i = 0
-    while i in range(5):
-        Code.append(random.choice(Num_Total))
-        i += 1
-    return Code
-
-#x = choose_code()
-
-'''
 2c: Display the possible Numbers to choose from and how to type them in
 
-no duplicates
-
-total_guessesis a dictionary
+total_guesses is a dictionary, where the guesses are the key and the values 
+are the clues. The key is a tuple and the clues are a string
 '''
 
 def Guess(total_guesses):
@@ -102,10 +88,10 @@ def Guess(total_guesses):
 
 this is the format of the previous guesses
 
-print(' 1, 2, 5, 8, 3 |  o o ✓')
+print(' 1, 2, 5, 8, 3 |  o o ● ')
 
 The input should be a dictionary in which the guesses are the key and the 
-clues are the value
+clues are the value. The key is a tuple and the value is a sting
 
 '''
 def display_guess(guess_code):
@@ -119,7 +105,7 @@ def display_guess(guess_code):
 #x = display_guess(h)
 
 '''
-3. Check the guess: no duplicates
+3. Check the guess:
 
 The input comes in like this '12345'
 
@@ -127,16 +113,16 @@ The input comes in like this '12345'
 def Clues_No(x,code):
     print("Take another Guess! \n")
     circle = ''
-    check_mark = ''
+    coloured_circle = ''
     for thing in x:
         if int(thing) in code:
             if x.index(thing) == code.index(int(thing)):
-                check_mark = check_mark + '● '
+                coloured_circle = coloured_circle + '● '
             else:
                 circle = circle + 'o '
         else:
             continue
-    clue = circle + check_mark
+    clue = circle + coloured_circle
     return clue
 
 #x = Clues_No('12345', [1,2,4,3,5])
