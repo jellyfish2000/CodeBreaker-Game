@@ -154,11 +154,11 @@ def play_game_no():
         total_guesses[guess[1]] = clue
         guess_num += 1
         if clue == '● ● ● ● ● ':
-            print('Congradulations That was my code')
+            print('Congratulations! That was my code')
             time.sleep(2)
             display_guess(total_guesses)
             time.sleep(2)
-            print('you Guessed it in ', 12 - guess_num, ' guesses!')
+            print('you Guessed it in ', guess_num, ' guesses!')
             break
         else:
             print("Here are your previous Guesses and clues: \n")
