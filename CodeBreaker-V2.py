@@ -161,7 +161,7 @@ def play_game():
             time.sleep(2)
             display_guess(total_guesses)
             time.sleep(2)
-            print('you Guessed it in ', 12 - guess_num, ' guesses!')
+            print('you Guessed it in ', guess_num, ' guesses!')
             break
         else:
             print("Here are your previous Guesses and clues: \n")
