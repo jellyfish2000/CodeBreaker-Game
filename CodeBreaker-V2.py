@@ -92,19 +92,8 @@ def Guess(total_guesses):
 
 '''
 3: calculate clue:
-    
-    [12311]
-    [11234]
-    ●ooo
-    
-    [2311]
-    [1234]
 
-check for doubles
-
-
-    
-    
+check for doubles    
 '''
 
 def Clues(code,guess):
