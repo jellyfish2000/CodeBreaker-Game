@@ -19,6 +19,7 @@ Version 3: The Computer is the Code Breaker and the User is the Code Maker
 8. End the game
 '''
 import random
+global i
 
 
 '''
@@ -78,6 +79,7 @@ def replace_1_num(new_guess,available,avail_index):
     index_guess = random.sample(avail_index, 1)
     index_ava = random.randint(0,len(available)-1)
     new_guess [index_guess[0]] = available[index_ava]
+    i = index_guess
     return new_guess
 '''
 h = [1,2,3,4,5] 
@@ -89,10 +91,10 @@ print(x)
 def replace_2_num(last_guess,available):
     #last_guess = list(list(total_guesses.keys())[len(total_guesses)-1])
     num = [0, 1, 2, 3, 4]
-    i = random.sample(num, 2)
+    in = random.sample(num, 2)
     new_guess = available.copy()
-    new_guess.append(last_guess[i[0]])
-    new_guess.append(last_guess[i[1]])
+    new_guess.append(last_guess[in[0]])
+    new_guess.append(last_guess[in[1]])
     return new_guess
 '''
 h = [1,2,3,4,5]
@@ -105,15 +107,10 @@ print(x)
 Old guess to new guess increases by one
 '''
 
-def increase_one(guess_old, guess_new, numbers, unused):
-    for item in guess_new:
-        if item not in guess_old:
-            numbers['yes'].append(item)
-            i = guess_new.index(item)
-            numbers['no'].append(guess_old[i])
-            unused.remove(item)
-            break
-    return i
+def increase_one(guess_old, guess_new, numbers, unused, i):
+    numbers['yes'].append(guess_new[i])
+    numbers['no'].append(guess_old[i])
+    unused.remove(guess_new[i])
 '''
 guess_old = [1,2,3,4,5]
 guess_new = [1,2,3,4,6]
@@ -123,16 +120,11 @@ x = increase_one(guess_old, guess_new, number)
 print(x)
 print(number)
 '''
-def increase_one_black(guess_old, guess_new, numbers, place, unused):
-    for item in guess_new:
-        if item not in guess_old:
-            numbers['yes'].append(item)
-            i = guess_new.index(item)
-            numbers['no'].append(guess_old[i])
-            place[item] = i
-            unused.remove(item)
-            break
-    return i
+def increase_one_black(guess_old, guess_new, numbers, place, unused, i):
+    numbers['yes'].append(guess_new[i])
+    numbers['no'].append(guess_old[i])
+    place[guess_new[i]] = i
+    unused.remove(guess_new[i])
 
 '''
 guess_old = [1,2,3,4,5]
@@ -147,15 +139,10 @@ print(place)
 print(number)
 
 '''
-def decrease_one(guess_old, guess_new, numbers, unused):
-    for item in guess_new:
-        if item not in guess_old:
-            numbers['no'].append(item)
-            i = guess_new.index(item)
-            numbers['yes'].append(guess_old[i])
-            unused.remove(item)
-            break
-    return i
+def decrease_one(guess_old, guess_new, numbers, unused, i):
+    numbers['no'].append(guess_new[i])
+    numbers['yes'].append(guess_old[i])
+    unused.remove(guess_new[i])
 '''       
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
@@ -166,16 +153,11 @@ x = decrease_one(guess_old, guess_new, number)
 print(number)
 '''
 
-def decrease_one_black(guess_old, guess_new, numbers, place, unused):
-    for item in guess_new:
-        if item not in guess_old:
-            numbers['no'].append(item)
-            i = guess_new.index(item)
-            numbers['yes'].append(guess_old[i])
-            place[guess_old[i]] = i
-            unused.remove(item)
-            break
-    return i
+def decrease_one_black(guess_old, guess_new, numbers, place, unused,i):
+    numbers['no'].append(guess_new[i])
+    numbers['yes'].append(guess_old[i])
+    place[guess_old[i]] = i
+    unused.remove(guess_new[i])
 '''
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
@@ -186,16 +168,12 @@ x = decrease_one_black(guess_old, guess_new, number, place)
 print(number)
 print(place)
 '''
-def same_black_get(guess_old, guess_new, numbers, place, unused):
-    for item in guess_new:
-        if item not in guess_old:
-            numbers['yes'].append(item)
-            i = guess_new.index(item)
-            numbers['yes'].append(guess_old[i])
-            place[item] = i
-            unused.remove(item)
-            break
-    return i
+def same_black_get(guess_old, guess_new, numbers, place, unused, i):
+    numbers['yes'].append(guess_new[i])
+    i = guess_new.index(item)
+    numbers['yes'].append(guess_old[i])
+    place[guess_new[i]] = i
+    unused.remove(guess[i])
 '''
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
@@ -207,16 +185,13 @@ print(number)
 print(place)
 
 '''
-def same_black_lose(guess_old, guess_new, numbers, place, unused):
+def same_black_lose(guess_old, guess_new, numbers, place, unused, i):
     for item in guess_new:
         if item not in guess_old:
-            numbers['yes'].append(item)
-            i = guess_new.index(item)
-            numbers['yes'].append(guess_old[i])
-            place[guess_old[i]] = i
-            unused.remove(item)
-            break
-    return i
+    numbers['yes'].append(guess_new[i])
+    numbers['yes'].append(guess_old[i])
+    place[guess_old[i]] = i
+    unused.remove(guess_new[i])
 
 '''
 guess_old = [1,2,3,4,6]
