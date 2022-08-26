@@ -105,12 +105,13 @@ print(x)
 Old guess to new guess increases by one
 '''
 
-def increase_one(guess_old, guess_new, numbers):
+def increase_one(guess_old, guess_new, numbers, unused):
     for item in guess_new:
         if item not in guess_old:
             numbers['yes'].append(item)
             i = guess_new.index(item)
             numbers['no'].append(guess_old[i])
+            unused.remove(item)
             break
     return i
 '''
