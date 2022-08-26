@@ -112,6 +112,7 @@ def increase_one(guess_old, guess_new, numbers):
             i = guess_new.index(item)
             numbers['no'].append(guess_old[i])
             break
+    return i
 '''
 guess_old = [1,2,3,4,5]
 guess_new = [1,2,3,4,6]
@@ -129,6 +130,7 @@ def increase_one_black(guess_old, guess_new, numbers, place):
             numbers['no'].append(guess_old[i])
             place[item] = i
             break
+    return i
 
 '''
 guess_old = [1,2,3,4,5]
@@ -150,6 +152,7 @@ def decrease_one(guess_old, guess_new, numbers):
             i = guess_new.index(item)
             numbers['yes'].append(guess_old[i])
             break
+    return i
 '''       
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
@@ -168,6 +171,7 @@ def decrease_one_black(guess_old, guess_new, numbers, place):
             numbers['yes'].append(guess_old[i])
             place[guess_old[i]] = i
             break
+    return i
 '''
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
@@ -206,6 +210,7 @@ def same_black_lose(guess_old, guess_new, numbers, place):
             numbers['yes'].append(guess_old[i])
             place[guess_old[i]] = i
             break
+    return i
 
 '''
 guess_old = [1,2,3,4,6]
@@ -223,7 +228,7 @@ made at least two guesses so far
 this function returns a new guess depending on the clues
 '''
 
-def Guess_under_5_intial(total_guesses, numbers, place, total_clues, available_index): 
+def Guess_under_5_intial(total_guesses, numbers, place, total_clues, available_index, unused): 
     
 
     old_clue = list(total_guesses.values())[len(total_guesses)-2]
@@ -238,21 +243,36 @@ def Guess_under_5_intial(total_guesses, numbers, place, total_clues, available_i
     old_check = total_clues[len(total_clues)-2][1]
     new_check = total_clues[len(total_clues)-1][1]
     
-    new = list(new_guess).copy()
+    
     
     
     
     if len(old_clue) < len(new_clue):
+        new = list(new_guess).copy()
         if new_check > old_check:
-            increase_one_black(old_guess, new_guess, numbers, place)
+            x = increase_one_black(old_guess, new_guess, numbers, place)
+            available_index.remove(x)
+            replace_1_num(new,unused,available_index)
+            #remember to update unused
+            return new
         elif new_circle > old_circle:
-            increase_one(old_guess, new_guess, numbers)
+            x = increase_one(old_guess, new_guess, numbers)
+            available_index.remove(x)
+            replace_1_num(new,unused,available_index)
+            return new
         # produce a new guess
     elif len(old_clue) > len(new_clue):
+        new = list(old_guess).copy()
         if old_circle > new_circle:
-            decrease_one(old_guess, new_guess, numbers)
+            x = decrease_one(old_guess, new_guess, numbers)
+            available_index.remove(x)
+            replace_1_num(new,unused,available_index)
+            return new
         elif old_check > new_check:
-            decrease_one_black(old_guess, new_guess, numbers, place)
+            x = decrease_one_black(old_guess, new_guess, numbers, place)
+            available_index.remove(x)
+            replace_1_num(new,unused,available_index)
+            return new
     elif len(old_clue) == len(new_clue):
         if old_clue == new_clue:
             #how to make new guess
@@ -265,7 +285,12 @@ def Guess_under_5_intial(total_guesses, numbers, place, total_clues, available_i
                 new[i] = old_guess[x]
                 return new
             elif old_check > new_check:
-                same_black_lose(old_guess, new_guess, numbers, place)
+                x = same_black_lose(old_guess, new_guess, numbers, place)
+                available_index.remove(x)
+                i = random.choice(available_index)
+                new = list(old_guess).copy()
+                new[i] = new_guess[x]
+                return new
                 
 
 
