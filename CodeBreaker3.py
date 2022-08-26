@@ -280,6 +280,7 @@ def Guess_under_5_intial(total_guesses, numbers, place, total_clues, available_i
             replace_1_num(new,unused,available_index)
             return new
     elif len(old_clue) == len(new_clue):
+        new = list(new_guess).copy()
         if old_clue == new_clue:
             #how to make new guess
             print('hi')
