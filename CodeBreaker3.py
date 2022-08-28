@@ -257,8 +257,7 @@ def Guess_under_5_intial(total_guesses, numbers, place, total_clues, available_i
     elif len(old_clue) == len(new_clue):
         new = list(new_guess).copy()
         if old_clue == new_clue:
-            #how to make new guess
-            print('hi')
+            new[i] = random.choice(unused)
         elif old_clue != new_clue:
             if new_check > old_check:
                 x = same_black_get(old_guess, new_guess,numbers,place)
