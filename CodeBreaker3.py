@@ -120,23 +120,24 @@ x = increase_one(guess_old, guess_new, number)
 print(x)
 print(number)
 '''
-def increase_one_black(guess_old, guess_new, numbers, place, unused, i):
+def increase_one_black(guess_old, guess_new, numbers, place, unused):
     numbers['yes'].append(guess_new[i])
     numbers['no'].append(guess_old[i])
     place[guess_new[i]] = i
     unused.remove(guess_new[i])
 
 '''
+i = 4
 guess_old = [1,2,3,4,5]
 guess_new = [1,2,3,4,6]
 number = {'yes':[],'no':[]}
-place = {1:-1, 2: -1, 3: -1, 4: -1, 5: -1, 6: -1, 7: -1, 8: -1}
-x = increase_one_black(guess_old, guess_new, number, place)
-
+place = {1:None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None, 8: None}
+unused = [6,7,8]
+x = increase_one_black(guess_old, guess_new, number, place, unused)
 print(x)
-
 print(place)
 print(number)
+
 
 '''
 def decrease_one(guess_old, guess_new, numbers, unused, i):
@@ -144,13 +145,16 @@ def decrease_one(guess_old, guess_new, numbers, unused, i):
     numbers['yes'].append(guess_old[i])
     unused.remove(guess_new[i])
 '''       
+i = 1
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
 number = {'yes':[],'no':[]}
+unused = [5,7,8]
 
-x = decrease_one(guess_old, guess_new, number)
+x = decrease_one(guess_old, guess_new, number, unused)
 
 print(number)
+print(unused)
 '''
 
 def decrease_one_black(guess_old, guess_new, numbers, place, unused,i):
@@ -159,14 +163,17 @@ def decrease_one_black(guess_old, guess_new, numbers, place, unused,i):
     place[guess_old[i]] = i
     unused.remove(guess_new[i])
 '''
+i = 1
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
 number = {'yes':[],'no':[]}
 place = {1:-1, 2: -1, 3: -1, 4: -1, 5: -1, 6: -1, 7: -1, 8: -1}
-x = decrease_one_black(guess_old, guess_new, number, place)
+unused = [5,7,8]
+x = decrease_one_black(guess_old, guess_new, number, place, unused)
 
 print(number)
 print(place)
+print(unused)
 '''
 def same_black_get(guess_old, guess_new, numbers, place, unused, i):
     numbers['yes'].append(guess_new[i])
@@ -175,14 +182,19 @@ def same_black_get(guess_old, guess_new, numbers, place, unused, i):
     place[guess_new[i]] = i
     unused.remove(guess[i])
 '''
+i = 1
 guess_old = [1,2,3,4,6]
 guess_new = [1,7,3,4,6]
 number = {'yes':[],'no':[]}
 place = {1:-1, 2: -1, 3: -1, 4: -1, 5: -1, 6: -1, 7: -1, 8: -1}
-x = same_black_get(guess_old, guess_new, number, place)
+unused = [5,7,8]
+
+x = same_black_get(guess_old, guess_new, number, place,unused)
 
 print(number)
 print(place)
+print(unused)
+
 
 '''
 def same_black_lose(guess_old, guess_new, numbers, place, unused, i):
@@ -194,13 +206,16 @@ def same_black_lose(guess_old, guess_new, numbers, place, unused, i):
     unused.remove(guess_new[i])
 
 '''
+i = 3
 guess_old = [1,2,3,4,6]
 guess_new = [1,2,3,7,6]
 number = {'yes':[],'no':[]}
 place = {1:-1, 2: -1, 3: -1, 4: -1, 5: -1, 6: -1, 7: -1, 8: -1}
-x = same_black_lose(guess_old, guess_new, number, place)
+unused = [5,7,8]
+x = same_black_lose(guess_old, guess_new, number, place,unused)
 
 print(number)
+print(unused)
 print(place)
 '''
 '''
