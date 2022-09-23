@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 21 22:35:25 2022
 
+@author: preet
+"""
+
+import random
 
 '''
 1: Explain the rules
@@ -31,375 +37,295 @@ def Code():
     x = input("Enter a 5 number code with no Dublicates:")
     return x
 
+
 '''
 3: First Guess
 '''
 
 def guess_initial():
-    n = [1,2,3,4,5,6,7,8]
+    n = ['1','2','3','4','5','6','7','8']
     h = random.sample(n,5)
     return h
+
+x = guess_initial()
+
+print(x)
 
 '''
 4: Input clues
 '''
-total_clues = []
+
 def clues(total_clues):
     x = input('Enter the number of numbers which are correct but not in the right spot:')
-    y = input('Enter the number of numbers which are correct and in the correct spot')
-    total_clues.append([x,y])
-
-'''
-5. Computer makes a new guess: Three correct numbers
-'''
-
-def three_num_correct(total_guesses, maybe, total_clues, available_index, unused, correct, no): 
+    y = input('Enter the number of numbers which are correct and in the correct spot: ')
+    total_clues.append([x,y]) 
     
-    global i
+    
+'''
+5. display guesses and update gusses
+'''
+
+def display_guess(total_guesses,total_clues, guess):
+    x = int(total_clues[-1][0])
+    h = x * 'o '
+    y = int(total_clues[-1][1])
+    h = h + '● ' * y
+    total_guesses[''.join(guess)] = h
+    for thing in total_guesses:
+        b = total_guesses[thing]
+        print(thing, '|', b )
+
+'''
+COmputer makes next guess:
+    
+    1. if increased circle
+        remove from available_numbers
+        choose another one
+    2. if decreased circle
+        old guess for new guess
+        remove a different number 
+        and in the future compare it to the 3 last guess
+    3. if stayed the same
+        replace the added number with an unused number
+    4. if no more unused numbers and no repeats
+        replace the added number in other spots
+    5. if no more unused numbers and has some repeats:
+        all the numbers which were replaces are in the code
+'''
+
+
+
+
+def next_guess(guess, available_numbers, unused):
+    global x
+    
+    y = random.choice(available_numbers)
+    available_numbers.remove(y)
+    x = random.choice(unused)
+    unused.remove(x)
+    
+    i = guess.index(y)
+    
+    guess[i] = x
+    
+    random.shuffle(guess)
+    
+    return guess
+
+
+guess = [1,2,3,4,5]
+avilable_numbers = [1,2,3,4,5]
+unused = [6,7,8]
+
+x = next_guess(guess, avilable_numbers, unused)
+
+
+print(x)
+
+def compare(total_guesses, available_numbers, unused, maybe):
     global y
-    
+    global x
     
     old_clue = list(total_guesses.values())[-2]
     new_clue = list(total_guesses.values())[-1]
 
-    old_guess = list(total_guesses.keys())[-2]
-    new_guess = list(total_guesses.keys())[-1]
+    old_guess = list(list(total_guesses.keys())[-2])
+    new_guess = list(list(total_guesses.keys())[-1])
     
-    old_check = total_clues[-2][1]
-    new_check = total_clues[-1][1]
-    
-    if y == 1:
-        old_guess = list(total_guesses.keys())[-3]
-        old_check = total_clues[-3][1]
-        old_clue = list(total_guesses.values())[-3]
-    if y == 2:
-        old_guess = list(total_guesses.keys())[-4]
-        old_check = total_clues[-4][1]
-        old_clue = list(total_guesses.values())[-4]
         
-    if len(old_clue) < len(new_clue):
-        new = list(new_guess).copy()
-        if new_check > old_check:
-            correct[i] = new_guess[i]
-        else:
-            no.append(new_guess[i])]
-        maybe = []
-        available_index.remove(i)
-        i = random.choice(available_index)
-        x = random.choice(unused)
-        new[i] = x
-        unused.remove(x)
-        return new
+    if y == 2:
+        old_guess = list(total_guesses.keys())[-3]
+    elif y ==3:
+        old_guess = list(total_guesses.keys())[-4]
+        
+        
     
-    elif len(old_clue) > len(new_clue):
-        new = list(old_guess).copy()
-        y += 1
-        if old_check > new_check:
-            correct[i] = old_guess[i]
-        else:
-            no.append(old_guess[i])
-        if len(maybe) > 0:
-            available_index.remove(i)
-            i = random.choice(available_index)
-            x = maybe[0]
-            new[i] = x
+    if len(old_clue) + 2 == len(new_clue):
+        if len(maybe) > 2:
             maybe = []
-        else:
-            available_index.remove(i)
-            i = random.choice(available_index)
-            x = random.choice(unused)
-            new[i] = x
-            unused.remove(x)
+        new = new_guess.copy()
+        
+        next_guess(new,available_numbers, unused)
         return new
     
-    elif len(old_clue) == len(new_clue):
-        if len(unused) == 0:
-            if new_check > old_check:
-                correct[i] = new_guess[i]
-            elif old_check > new_check:
-                correct[i] = old_guess[i]
-            else:
-                no.append(new_guess[i])
-                no.append(old_guess[i])
+    if len(old_clue) - 2 == len(new_clue):
+        if len(maybe) > 0:
             new = old_guess.copy()
-            available_index.remove(i)
-            x = new_guess[i]
-            i = random.choice(available_index)
+            y = random.choice(available_numbers)
+            available_numbers.remove(x)
+            x = maybe[0]
+            i = new.index(y)
             new[i] = x
+            random.shuffle(new)
             return new
-        
-        elif old_clue != new_clue:  
-            if new_check > old_check:
-                no.append(old_guess[i])
-                new = new_guess.copy()
-                correct[i] = new_guess[i]
-                available_index.remove(i)
-                x = i
-                i = random.choice(available_index)
-                new[i] = old_guess[x]
-                return new
-            
-            elif old_check > new_check:
-                no.append(new_guess[i])
-                new = old_guess.copy()
-                correct[i] = old_guess[i]
-                available_index.remove(i)
-                x = new_guess[i]
-                i = random.choice(available_index)
-                new[i] = x
-                return new
-            
-        elif old_clue == new_clue:
-            no.append(old_guess[i])
-            no.append(new_guess[i])
-            if len(new_clue) == 8 and len(maybe) >= 2:
-                new  = new_guess.copy()
-                x = random.choice(unused)
-                unused.remove(x)
-                new[i] = x
-                maybe = []
-                return new
-            
-            elif new_guess[i] in maybe:
-                new = new_guess.copy()
-                maybe.append(old_guess[i])
-                x = old_guess[i]
-                available_index.remove(i)
-                i = random.choice(available_index)
-                new[i] = x
-                return new
-            
-            elif len(maybe) >= 2:
-                maybe.append(new_guess[i])
-                new = list(new_guess).copy()
-                x = random.choice(unused)
-                new[i] = x
-                unused.remove(x)
-                return new
-            
-            elif len(unused) == 0:
-                new = new_guess.copy()
-                x = new_guess[i]
-                i = random.choice(available_index)
-                new[i] = x
-            
-            else:
-                new = list(new_guess).copy()
-                maybe.append(old_guess[i])
-                maybe.append(new_guess[i])
-                x = random.choice(unused)
-                new[i] = x
-                unused.remove(x)
-                return new
-
-
-'''
-5: Computer makes a guess: 4 intially right numbers
-'''
-
-def four_num_correct(total_guesses, maybe, total_clues, available_index, unused, correct,no):
-    global i
-    global y
-    
-    old_clue = list(total_guesses.values())[-2]
-    new_clue = list(total_guesses.values())[-1]
-
-    old_guess = list(total_guesses.keys())[-2]
-    new_guess = list(total_guesses.keys())[-1]
-    
-    old_check = total_clues[len(total_clues)-2][1]
-    new_check = total_clues[len(total_clues)-1][1]
-    
-    if y == 1:
-        old_guess = list(total_guesses.keys())[-3]
-        old_check = total_clues[-3][1]
-        old_clue = list(total_guesses.values())[-3]
-    
-    if y == 2:
-        old_guess = list(total_guesses.keys())[-4]
-        old_check = total_clues[-4][1]
-        old_clue = list(total_guesses.values())[-4]
-        
-    if len(unused) == 0:
-        if new_check > old_check:
-            correct[i] = new_guess[i]
-            no.append(old_guess[i])
-        if old_check > new_check:
-            correct[i] = old_guess[i]
-            no.append(new_guess[i])
-        new = old_guess.copy()
-        available_index.remove(i)
-        x = new_guess[i]
-        i = random.choice(available_index)
-        new[i] = x
+        else: 
+            new = old_guess.copy()
+            y += 1
+            next_guess(new,available_numbers, unused)
         return new
-    
-    elif len(old_clue) < len(new_clue):
-        if new_check > old_check:
-            correct[i] = new_guess[i]
-        else:
-            no.append(new_guess[i])
-            
-    elif len(old_clue) > len(new_clue):
-        new = old_guess.copy()
-        y += 1
-        if old_check > new_check:
-            correct[i] = old_guess[i]
-        else:
-            no.append(old_guess[i])
-        x = random.choice(unused)
-        unused.remove(x)
-        available_index.remove(i)
-        i = random.choice(available_index)
-        new[i] = x
+    if len(old_clue) == len(new_clue):
+        new = new_guess.copy()
+        maybe.append(x)
+        h = old_guess.copy()
+        for n in old_guess:
+            if n in new:
+                h.remove(n)
+        maybe.append(h[0])
+        i = new.index(x)
+        m = random.choice(unused)
+        new[i] = m
+        unused.remove(m)
+        random.shuffle(new)
         return new
-    
-    elif len(old_clue) == len(new_clue):
-        x = random.choice(unused)
-        unused.remove(x)
-        new[i] = x
-        return new
-    
-'''
-5: Computer Guesses: 2 inital correct numbers
-'''
 
-def guess_under_2(unused,initial):
-    new = unused.copy()
-    x = random.sample(initial,2)
-    new.append(x[0])
-    new.append(x[1])
-    random.shuffle(new)
+total_guesses = {'12345': 'o o o ● ', '12346': 'o o ● '}
+available_numbers = ['1','2','3','4']
+unused = ['7','8']
+maybe =[]
+y = 0
+x = 6
+
+
+x = compare(total_guesses, available_numbers, unused, maybe)
+
+print(x)
+print(avilable_numbers)
+print(unused)
+
+def generate_combinations(l_ist):
+    new = []
+    new.append([l_ist[0],l_ist[1]])
+    new.append([l_ist[0],l_ist[2]])
+    new.append([l_ist[0],l_ist[3]])
+    new.append([l_ist[0],l_ist[4]])
+                
+    new.append([l_ist[1],l_ist[2]])
+    new.append([l_ist[1],l_ist[3]])
+    new.append([l_ist[1],l_ist[4]])
+    
+    new.append([l_ist[2],l_ist[3]])
+    new.append([l_ist[2],l_ist[4]])
+    
+    new.append([l_ist[3],l_ist[4]])
     return new
 
-'''
-FInd the indexes
-'''
-def find_indexes(correct):
-    n = []
-    for i in correct:
-        if correct[i] == None:
-            n.append(i)
-    return n
-
-
-'''
-Swap 2 random indexes
-'''
-def swap_two_rand(indexes, guess):
-    global i
-    i = random.sample(indexes, 2)
-    guess[i[0]],guess[i[1]] = guess[i[1]],guess[i[0]]
-    #new = ''.join(h)
-    return guess
-'''
-Swap two specific indexes
-'''
-def swap_not_rand(guess):
-    global i
-    guess[i[0]],guess[i[1]] = guess[i[1]],guess[i[0]]
-    return guess
-
-'''
-Pattern with three numbers with correct placement, two known and one not known
-'''
-def three_correct_maybe(possible,indexes,total_clues, total_guesses):
-    global i
-    
-    if total_clues[-1][1] == 3:
-        last = list(total_guesses.keys())[-1]
-        x = random.choice(possible[-1])
-        i = [last.index(x),indexes[0]]
-        last[i[0]],last[i[1]] = last[i[1]],last[i[0]]
-        possible[-1].remove(x)
-        return last
-    if total_clues[-1][1] == 2:
-        new = list(total_guesses.keys())[-2]
-        h = (possible[-1][0])
-        i = [new.index(h),indexes[0]]
-        new[i[0]],new[i[1]] = new[i[1]],new[i[0]]
-        return new
-
-'''
-Trying to find the placement in which all the correct ones are known
-
-gotta change no to the indexes not the numbers
-
-'''
-
-def placement_intial(no,indexes,maybe,total_guess,total_clues,nope,swapped):
-    
-    global i
+def no_unused(total_guesses,maybe, available_numbers):
     global y
-    global u
+    global x
     
-    old_check = total_clues[-2][1]
-    new_check = total_clues[-1][1]
-    
-    new_guess = list(total_guesses.keys())[-1]
-    old_guess = list(total_guesses.keys())[-2]
-    
-    new = new_guess.copy()
-    
-    
-    if new_check == 3:
-        i = indexes
-        x = swap_not_rand(new)
-        return x
-    
-    elif new_check == 2:
-        x = swap_two_rand(indexes, new)
-        return x
-    
-    elif new_check == 1:
-        if len(no) == 1:
-            indexes.remove(no[0])
-            i = [no[0], randome.choice(indexes)]
-        elif len(no) == 2:
-            swapped.append(no)
-            indexes.remove(no[0])
-            indexes.remove(no[1])
-            swapped.append(indexes)
-            i=[]
-            new[no[0]],new[indexes[0]] = new[indexes[0]],new[no[0]]
-            new[no[1]],new[indexes[1]] = new[no[1]],new[indexes[1]]
-            return new
-        
-        else:
-            x = swap_two_rand(indexes, new)
-            return x
+    old_clue = list(total_guesses.values())[-2]
+    new_clue = list(total_guesses.values())[-1]
 
-    elif new_check == 0:
-        if len(no) == 1:
-            indexes.remove(no[0])
-            i = [no[0], randome.choice(indexes)]
-        elif len(no) == 2:
-            swapped.append(no)
-            indexes.remove(no[0])
-            indexes.remove(no[1])
-            i = random.sample(indexes, 2)
-            swapped.append(i)
-            new[no[0]],new[i[0]] = new[i[0]],new[no[0]]
-            new[no[1]],new[i[1]] = new[i[1]],new[no[1]]
-            return new
-        elif len(no) == 3:
-            l = random.sample(no,2)
-            indexes.remove(l[0])
-            indexes.remove(l[1])
-            h = random.sample(indexes,2)
-            swapped.append(l)
-            swapped.appened(h)
-            new[l[0]],new[h[0]] = new[h[0]],new[l[0]]
-            new[l[1]],new[h[1]] = new[h[1]],new[l[1]]
-            return new
-            
-        else:
-            x = swap_two_rand(indexes, new)
-            return x
+    old_guess = list(total_guesses.keys())[-2]
+    new_guess = list(total_guesses.keys())[-1]
+
+    
+    if len(maybe) == 0:
+        new = old_guess.copy()
+        available_numbers.remove(x)
+        j = random.choice(available_numbers)
+        l = new.index(j)
+        new[l] = x
+        available_numbers.remove(j)
+        random.shuffle(new)
+        return new
+    
+    
+    
+def no_unused_and_maybe(total_guesses,maybe, available_numbers, unused):
+    
+    global y
+    global x
         
+    if len(maybe) == 3 :
+        new = maybe
+        m = [1,2,3,4,5,6,7,8]
+        m.remove(maybe[0])
+        m.remove(maybe[1])
+        m.remove(maybe[2])
+        n = generate_combinations(m)
+        h = random.choice(n)
+        new.append(h[0])
+        new.append(h[1])
+        unused = n
+        random.shuffle(new)
+        return new
+        
+        
+        
+def play_game():
+    Beginning()
+    total_guesses = {}
+    total_clues = []
+    maybe = []
+    y = 0
+    x = None
+
+    print("Ok! Let's get started")
+    x = Code() #enter code
+    y = guess_initial()#enter guess
+    print("I guess: ", ''.join(y))
+    available_numbers = y.copy()
+    unused = ['1','2','3','4','5','6','7','8']
+    
+    for thing in y:
+        if thing in unused:
+            unused.remove(thing)
+        
+    
+    clues(total_clues) # enter clues
+    display_guess(total_guesses,total_clues,y) #display guess
+    print('Ok! Now I will guess another')
+    
+    
+    
+    if len(list(total_guesses.values())[-1]) != 10:
+        guess = list(list(total_guesses.keys())[-1])
+        next_guess(guess, available_numbers, unused)# Gusses the next guess
+        print(' I guess: ', ''.join(guess))
+        clues(total_clues)
+        display_guess(total_guesses,total_clues,guess)
+        
+        
+    
+        while len(list(total_guesses.values())[-1]) != 10:
+            print('Ok! Now I will guess another clue')
+            guess = compare(total_guesses, available_numbers, unused, maybe)
+            print(' I guess: ', ''.join(guess))
+            clues(total_clues)
+            display_guess(total_guesses, total_clues, guess)
+    print('done')
+
+
+play_game()
+            
             
         
-            
+        
+        
+    
+
+    
+    
+        
+        
+        
+        
+        
+    
+    
+        
+        
+
+
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
