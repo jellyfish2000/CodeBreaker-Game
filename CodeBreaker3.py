@@ -122,7 +122,22 @@ x = next_guess(guess, avilable_numbers, unused)
 
 print(x)
 
-def compare(total_guesses, available_numbers, unused, maybe):
+def two_intial(total_guesses, available_numbers, unused, maybe):
+    global x
+    
+    new_guess = list(list(total_guesses.keys())[-1])
+    
+    new = unused.copy()
+    m = random.sample(new_guess,2)
+    new.append(m[0])
+    new.append(m[1])
+    return new
+
+
+
+
+
+def compare(total_guesses, available_numbers, unused, maybe, n):
     global y
     global x
     
@@ -132,51 +147,162 @@ def compare(total_guesses, available_numbers, unused, maybe):
     old_guess = list(list(total_guesses.keys())[-2])
     new_guess = list(list(total_guesses.keys())[-1])
     
-        
-    if y == 2:
-        old_guess = list(total_guesses.keys())[-3]
-    elif y ==3:
-        old_guess = list(total_guesses.keys())[-4]
-        
+    
+    if y > 0:
+        old_guess = list(total_guesses.keys())[-1*(y+2)]
+        old_clue = list(total_guesses.values())[-1*(y+2)]
         
     
-    if len(old_clue) + 2 == len(new_clue):
+    if len(unused) == 0:
+        
+        if len(maybe) == 2 and len(old_clue) == len(new_clue) and len(new_clue) == 6:
+            maybe.append(x)
+            new = maybe.copy()
+            m = [1,2,3,4,5,6,7,8]
+            m.remove(maybe[0])
+            m.remove(maybe[1])
+            m.remove(maybe[2])
+            available_numbers = m
+            
+            l = random.sample(available_numbers,2)
+            new.append(l[0])
+            new.append(l[1])
+            available_numbers.remove(l[0])
+            available_numbers.remove(l[1])
+            x = l
+            random.shuffle(new)
+            return new
+        
+        elif len(old_clue) == len(new_clue) and len(new_clue) == 8:
+            y += 1
+            new = old_guess.copy()
+            l = random.choice(available_numbers)
+            i = new.index(l)
+            available_numbers.remove(l)
+            new[i] = x
+            random.shuffle(new)
+            return new
+        
+        elif len(old_clue) == len(new_clue) and len(new_clue) == 6:
+            
+            new = new_guess.copy()
+            new.remove(x[1])
+            new.remove(x[0])
+            
+            l = random.sample(available_numbers,2)
+            new.append(l[0])
+            new.append(l[1])
+            available_numbers.remove(l[0])
+            available_numbers.remove(l[1])
+            x = l
+            random.shuffle(new)
+            return new
+        
+        elif len(old_clue) + 1 == len(new_clue) and len(new_clue) == 4:
+            new = new_guess.copy()
+            new.index(x[0])
+            available_numbers
+        #helohelohelohelo
+            
+    
+    elif len(unused) == 0 and len(maybe) > 0 and len(old_clue) == len(new_clue):
+        maybe.append(x)
+        h = old_guess.copy()
+        for n in old_guess:
+            if n in new:
+                h.remove(n)
+        if h[0] not in maybe:
+            maybe.append(h[0])
+        
+        if len(maybe) == 3 :
+            new = maybe.copy()
+            unused = [1,2,3,4,5,6,7,8]
+            
+            unused.remove[maybe[0]]
+            unused.remove[maybe[1]]
+            unused.remove[maybe[2]]
+            
+            l = random.sample(unused,2)
+            available_numbers = unused.copy()
+            available_numbers.remove(l[0])
+            available_numbers.remove(l[1])
+            
+            new.append(l[0])
+            new.append(l[1])            
+            
+            x = l[0]
+            
+            random.shuffle(new)
+
+            return new
+        
+        elif len(maybe) == 2:
+            new_guess = list(total_guesses.keys())[-1]
+            new = new_guess.copy()
+            x = maybe[0]
+            l = random.choice(new_guess)
+            i = new.index(l)
+            
+            new[i] = x
+            return new
+        
+    
+    
+    elif len(old_clue) + 2 == len(new_clue):
         if len(maybe) > 2:
             maybe = []
         new = new_guess.copy()
         
         next_guess(new,available_numbers, unused)
         return new
+        
     
-    if len(old_clue) - 2 == len(new_clue):
+    elif len(old_clue) - 2 == len(new_clue):
         if len(maybe) > 0:
             new = old_guess.copy()
             y = random.choice(available_numbers)
-            available_numbers.remove(x)
+            available_numbers.remove(y)
             x = maybe[0]
             i = new.index(y)
             new[i] = x
             random.shuffle(new)
+            maybe = []
             return new
         else: 
             new = old_guess.copy()
             y += 1
             next_guess(new,available_numbers, unused)
-        return new
-    if len(old_clue) == len(new_clue):
+            return new
+    
+    
+    elif len(old_clue) == len(new_clue):
+        if len(maybe) > 0:
+            new = maybe.copy()
+            new.append(x)
+            interm = new_guess.copy()
+            interm.remove(x)
+            l = random.sample(interm, 2)
+            # ths is not right
+        
         new = new_guess.copy()
         maybe.append(x)
+        
         h = old_guess.copy()
         for n in old_guess:
             if n in new:
                 h.remove(n)
-        maybe.append(h[0])
+        if h[0] not in maybe:
+            maybe.append(h[0])
+        
         i = new.index(x)
         m = random.choice(unused)
         new[i] = m
         unused.remove(m)
         random.shuffle(new)
+        
         return new
+
+        
 
 total_guesses = {'12345': 'o o o ● ', '12346': 'o o ● '}
 available_numbers = ['1','2','3','4']
@@ -213,16 +339,16 @@ def no_unused(total_guesses,maybe, available_numbers):
     global y
     global x
     
-    old_clue = list(total_guesses.values())[-2]
-    new_clue = list(total_guesses.values())[-1]
+    #old_clue = list(total_guesses.values())[-2]
+    #new_clue = list(total_guesses.values())[-1]
 
-    old_guess = list(total_guesses.keys())[-2]
+    #old_guess = list(total_guesses.keys())[-2]
     new_guess = list(total_guesses.keys())[-1]
 
     
     if len(maybe) == 0:
-        new = old_guess.copy()
-        available_numbers.remove(x)
+        new = new_guess.copy()
+        #available_numbers.remove(x)
         j = random.choice(available_numbers)
         l = new.index(j)
         new[l] = x
@@ -245,10 +371,20 @@ def no_unused_and_maybe(total_guesses,maybe, available_numbers, unused):
         m.remove(maybe[2])
         n = generate_combinations(m)
         h = random.choice(n)
+        n.remove(h)
         new.append(h[0])
         new.append(h[1])
         unused = n
         random.shuffle(new)
+        return new
+    elif len(maybe) == 2:
+        new_guess = list(total_guesses.keys())[-1]
+        new = new_guess.copy()
+        x = maybe[0]
+        l = random.choice(new_guess)
+        i = new.index(l)
+        
+        new[i] = x
         return new
         
         
