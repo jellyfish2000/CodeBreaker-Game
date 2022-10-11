@@ -207,7 +207,86 @@ def compare(total_guesses, available_numbers, unused, maybe, n):
             return new
              
             
+# After the combinations are picked
+# the fuction that chooses what happens next
+
+def after_three_known(total_guesses, interm):
+    
+    global l
+    global x
+    global h
+    
+    old_clue = list(total_guesses.values())[-2]
+    new_clue = list(total_guesses.values())[-1]
+
+    old_guess = list(list(total_guesses.keys())[-2])
+    new_guess = list(list(total_guesses.keys())[-1])
+    
+    if len(old_clue) == len(new_clue):
         
+        new = new_guess.copy()
+        interm = x
+        new.remove(x[0])
+        new.remove(x[1])
+        
+        for thing in l:
+            for item in thing:
+                if item in x:
+                    l.remove(thing)
+                    break
+        x = random.choice(l)
+        new.append(x[0])
+        new.append(x[1])
+        
+        
+        random.shuffle(new)
+        
+        return new
+    
+    elif len(old_clue) + 1 == len(new_clue):
+        
+        if h > 1:
+            # need to compare x = [1,4] and interm(the previous x [1,2])
+            # You should out put two outcomes: [2,4] and [1,3]
+            # need to fix this
+            
+            b = []
+            
+            for thing in interm:
+                if thing not in x:
+                    b.append(thing)
+                    
+            
+            
+            
+            
+            return 0
+        else:
+            
+            
+            h += 1
+            interm = x
+            
+            new = new_guess.copy()
+            new.remove(x[0])
+            new.remove(x[1])
+            
+            for thing in l:
+                for item in thing:
+                    if item not in x:
+                        l.remove(thing)
+                        break
+            x = random.choice(l)
+            new.append(x[0])
+            new.append(x[1])
+            
+            random.shuffle(new)
+            return new                
+            
+        
+        
+        
+
         
 
 
