@@ -196,6 +196,7 @@ def compare(total_guesses, available_numbers, unused, maybe, n):
             m.remove(new[0])
             m.remove(new[1])
             m.remove(new[2])
+            m.remove(unused[0])
             l = Generate_combinations(m)
             x = random.choice(l)
             l.remove(x)
@@ -245,24 +246,39 @@ def after_three_known(total_guesses, interm):
     
     elif len(old_clue) + 1 == len(new_clue):
         
-        if h > 1:
+        if h == 1:
             # need to compare x = [1,4] and interm(the previous x [1,2])
             # You should out put two outcomes: [2,4] and [1,3]
-            # need to fix this
+            
+            new = new.remove(x[1])
+            new = new.append(x[0])
             
             b = []
+            h = []
             
             for thing in interm:
                 if thing not in x:
                     b.append(thing)
-                    
+                else:
+                    h.append(thing)
+            for item in x:
+                if item not in interm:
+                    b.append(item)
             
+            for it in l:
+                for lemon in it:
+                    if lemon in h:
+                        l.remove(it)
+                        break
             
+            x = b
+            new.append(x[0])
+            new.append(x[1])
             
-            
-            return 0
+            random.shuffle(new)
+            return new
+        
         else:
-            
             
             h += 1
             interm = x
@@ -284,7 +300,7 @@ def after_three_known(total_guesses, interm):
             return new                
             
         
-        
+# play the game::::
         
 
         
