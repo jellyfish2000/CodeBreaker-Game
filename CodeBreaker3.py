@@ -61,22 +61,36 @@ def Generate_combinations(l_ist):
                 combinations.append([thing,item])
     return combinations
 
+
+def make_unused(guess):
+    m = ['1','2','3','4','5','6','7','8']
+    for thing in guess:
+        if thing in m:
+            m.remove(thing)
+            
+    return m
+
+
+        
+
 # Removes one number from the guess and replaces it with another
 # Guess is the guess in which we want to remove one number from
 
 def next_guess(guess, available_numbers, unused):
     global x
     
-    y = random.choice(available_numbers)
-    available_numbers.remove(y)
+    lemons = guess.copy()
+    
+    m = random.choice(available_numbers)
+    available_numbers.remove(m)
     x = random.choice(unused)
     unused.remove(x)
-    i = guess.index(y)
-    guess[i] = x
+    lemons.remove(m)
+    lemons.append(x)
 
-    random.shuffle(guess)
+    random.shuffle(lemons)
     
-    return guess
+    return lemons
 
 
 # Compares the guesses and outputs the new one when there are 
@@ -181,6 +195,7 @@ def compare(total_guesses, available_numbers, unused, maybe, n):
                 if thing not in new_guess:
                     maybe.append(thing)
                      
+            new = new_guess.copy()
             new.remove(x)
             x = random.choice(unused)
             new.append(x)
@@ -211,18 +226,31 @@ def compare(total_guesses, available_numbers, unused, maybe, n):
 # After the combinations are picked
 # the fuction that chooses what happens next
 
-def after_three_known(total_guesses, interm):
+def after_three_known(total_guesses, interm, unused):
     
     global l
     global x
     global h
     
-    old_clue = list(total_guesses.values())[-2]
-    new_clue = list(total_guesses.values())[-1]
+    try:
+        old_clue = list(total_guesses.values())[-2]
+        new_clue = list(total_guesses.values())[-1]
 
-    old_guess = list(list(total_guesses.keys())[-2])
-    new_guess = list(list(total_guesses.keys())[-1])
+        old_guess = list(list(total_guesses.keys())[-2])
+        new_guess = list(list(total_guesses.keys())[-1])
     
+    except:
+        new = unused
+        old_guess = list(list(total_guesses.keys())[-1])
+        l = Generate_combinations(old_guess)
+        x = random.choice(l)
+        new.append(x[1])
+        new.append(x[0])
+        
+        random.shuffle(new)
+        
+        return new
+        
     if len(old_clue) == len(new_clue):
         
         new = new_guess.copy()
@@ -300,10 +328,86 @@ def after_three_known(total_guesses, interm):
             return new                
             
         
-# play the game::::
+def play_game():
+    
+    global x
+    global y
+    global l
+    global h  
+    
+    total_clues = []
+    total_guesses= {}
+    x = None
+    interm = None
+    y = 0
+    l = []
+    h = None
+    interm = None
+    n = None
+    maybe = []
+    
+    # 1. the User picks the Code:
+    code = Code()
+    
+    # 2. Intial guess from the computer
+    guess = guess_initial()
+    print(guess)
+    unused = make_unused(guess)
+    
+    # 3. User writes in the clues
+    clues(total_clues)
+    
+    # 4. Display the guess and the clue
+    display_guess(total_guesses,total_clues, guess)
+    
+    # 5. Compare the guess and the clue:
+        # if there are only two numbers that are right we have to deploy:
+            # after_three_known(total_guesses, interm):
+        # if not guess a ranomd one
+    available_numbers = guess
+    
+    print(total_clues[0][1] + total_clues[0][0])
+        
+    if total_clues[0][1] + total_clues[0][0] == 2:
+        while total_clues[-1][1] + total_clues[-1][0] != 5:
+            
+            new_one = after_three_known(total_guesses, interm, unused)
+            print(new_one)
+            
+            clues(total_clues)
+            display_guess(total_guesses,total_clues, new_one)
+        
+    else:
+        new_one = next_guess(guess, available_numbers, unused)
+        print(new_one)
+        clues(total_clues)
+        display_guess(total_guesses,total_clues, new_one)
+        
+        while total_clues[-1][1] + total_clues[-1][0] != 5:
+            
+            if len(l) == 0:
+            
+                new_one = compare(total_guesses, available_numbers, unused, maybe, n)
+                print(new_one)
+                
+                clues(total_clues)
+                display_guess(total_guesses,total_clues, new_one)
+                
+            elif len(l) != 0:
+                new_one = after_three_known(total_guesses, interm, unused)
+                print(new_one)
+                
+                clues(total_clues)
+                display_guess(total_guesses,total_clues, new_one)
+                
+                
+            
+            
+            
         
 
-        
+
+play_game()
 
 
 
